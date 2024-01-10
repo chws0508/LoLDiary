@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LoL Diary</string>
+    <string name="tag">태그</string>
+    <string name="nickname">닉네임</string>
+    <string name="onboarding_complete">완료</string>
+
+    <string name="tab_home_title">홈</string>
+    <string name="tab_diary_title">일기장</string>
+    <string name="tab_black_list_title">블랙리스트</string>
+</resources>
