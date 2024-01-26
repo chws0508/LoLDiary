@@ -2,8 +2,11 @@ package com.woosuk.loldiary.ui.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woosuk.loldiary.domain.model.UserAccount
+import com.woosuk.loldiary.domain.usecase.GetPreviousUserAccountsUseCase
 import com.woosuk.loldiary.domain.usecase.GetUserUseCase
 import com.woosuk.loldiary.domain.usecase.SaveUserUseCase
+import com.woosuk.loldiary.ui.utils.CountingIdlingResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,6 +25,8 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val saveUserUseCase: SaveUserUseCase,
+    private val getPreviousUserAccountUseCase: GetPreviousUserAccountsUseCase,
+    private val countingIdlingResource: CountingIdlingResource,
 ) : ViewModel() {
 
     private val _nickName: MutableStateFlow<String> = MutableStateFlow("")
@@ -35,6 +40,17 @@ class OnboardingViewModel @Inject constructor(
 
     private val _onboardingEvent: MutableSharedFlow<OnboardingEvent> = MutableSharedFlow()
     val onboardingEvent = _onboardingEvent.asSharedFlow()
+
+    private val _previousUserAccounts: MutableStateFlow<List<UserAccount>> = MutableStateFlow(
+        emptyList()
+    )
+    val previousUserAccounts = _previousUserAccounts.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _previousUserAccounts.value = getPreviousUserAccountUseCase()
+        }
+    }
 
     fun onNickNameChanged(newValue: String) {
         _nickName.update { newValue }
@@ -61,16 +77,19 @@ class OnboardingViewModel @Inject constructor(
             getUserUseCase(
                 gameName = nickName.value,
                 tagLine = tagLine.value,
-                isCurrentUser = true,
                 onError = {
                     launch { _onboardingEvent.emit(OnboardingEvent.Error(it)) }
                 },
             ).onEach {
                 saveUserUseCase(userAccount = it.userAccount)
                 _onboardingEvent.emit(OnboardingEvent.Success)
-            }.onStart { _isLoading.value = true }
-                .onCompletion { _isLoading.value = false }
-                .launchIn(this)
+            }.onStart {
+                _isLoading.value = true
+                countingIdlingResource.increment()
+            }.onCompletion {
+                _isLoading.value = false
+                countingIdlingResource.decrement()
+            }.launchIn(this)
         }
     }
 

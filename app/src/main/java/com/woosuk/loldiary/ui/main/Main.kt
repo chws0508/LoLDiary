@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
@@ -54,6 +55,7 @@ import com.woosuk.loldiary.ui.onboarding.navigation.onboardingScreen
 @Composable
 fun LoLDiaryApp(
     navController: NavHostController = rememberNavController(),
+    mainViewModel: MainViewModel = hiltViewModel(),
     startDestination: String,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,6 +66,7 @@ fun LoLDiaryApp(
         topBar = {
             if (currentDestination?.route != ONBOARDING_ROUTE) {
                 MainTopBar(navigateToOnBoarding = {
+                    mainViewModel.logout()
                     navController.navigateToOnboarding(
                         clearAllStackOptions,
                     )
@@ -110,7 +113,9 @@ fun MainTopBar(
         actions = {
             Text(
                 text = "로그아웃",
-                modifier = Modifier.clickable { navigateToOnBoarding() }.padding(end = 10.dp),
+                modifier = Modifier
+                    .clickable { navigateToOnBoarding() }
+                    .padding(end = 10.dp),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )

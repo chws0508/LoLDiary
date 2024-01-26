@@ -19,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.woosuk.loldiary.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -89,10 +89,14 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // hilt
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
+    // For instrumented tests.
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
@@ -101,17 +105,20 @@ dependencies {
 
     // landScape
     implementation("com.github.skydoves:landscapist-glide:2.2.13")
-    implementation ("com.github.skydoves:landscapist-coil:2.2.13")
+    implementation("com.github.skydoves:landscapist-coil:2.2.13")
 
     // navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.5.3")
 
     // network
     implementation("com.github.skydoves:sandwich:1.3.7")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    androidTestImplementation("com.jakewharton.espresso:okhttp3-idling-resource:1.0.0")
+    implementation("com.jakewharton.espresso:okhttp3-idling-resource:1.0.0")
 
     // Database
     implementation("androidx.room:room-runtime:2.5.0")
@@ -124,6 +131,9 @@ dependencies {
 
     // coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
+    // mock
+    testImplementation("io.mockk:mockk:1.13.5")
 }
 
 kapt {

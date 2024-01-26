@@ -15,12 +15,11 @@ class GetCurrentUserUseCase @Inject constructor(
     suspend operator fun invoke(
         onError: (String) -> Unit,
     ): Flow<User> = flow {
-        val userAccount = userRepository.getCurrentUserAccount() ?: return@flow
+        val userAccount = userRepository.getCurrentUserAccount() ?: throw IllegalStateException()
         emit(
             userRepository.getUser(
                 userAccount.gameName,
                 userAccount.tageLine,
-                false,
             ) { onError(it) }.first(),
         )
     }.flowOn(Dispatchers.IO)

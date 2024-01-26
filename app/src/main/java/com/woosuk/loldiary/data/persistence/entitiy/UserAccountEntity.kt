@@ -18,13 +18,23 @@ fun UserAccountEntity.toDomain(): UserAccount = UserAccount(
     gameName = gameName,
     tageLine = tagLine,
     summonerId = summonerId,
-    isCurrentUser = true,
+    isCurrentUser = isCurrentUser,
 )
 
-fun UserAccount.toEntity(): UserAccountEntity = UserAccountEntity(
+fun UserAccount.toEntity(isCurrentUser: Boolean): UserAccountEntity = UserAccountEntity(
     puuid = uid,
     summonerId = summonerId,
     gameName = gameName,
     tagLine = tageLine,
-    isCurrentUser = true,
+    isCurrentUser = isCurrentUser,
 )
+
+fun List<UserAccountEntity>.toDomain() = map {
+    UserAccount(
+        uid = it.puuid,
+        gameName = it.gameName,
+        tageLine = it.tagLine,
+        summonerId = it.summonerId,
+        isCurrentUser = it.isCurrentUser,
+    )
+}

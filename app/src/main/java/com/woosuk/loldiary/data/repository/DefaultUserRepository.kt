@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -35,23 +34,27 @@ class DefaultUserRepository @Inject constructor(
     override suspend fun getUser(
         gameName: String,
         tageLine: String,
-        isCurrentUser: Boolean,
         onError: (String) -> Unit,
-    ): Flow<User> = withContext(Dispatchers.IO) {
+    ): Flow<User> = flow<User> {
         val userAccount =
             getUserAccount(gameName, tageLine) { throw IllegalStateException(it) }.single()
 
-        getUserProfileDto(userAccount.uid) { throw IllegalStateException(it) }
-            .zip(
-                getUserRankInfo(userAccount.summonerId) { throw IllegalStateException(it) },
-            ) { userProfileDto, userRankInfo ->
-                User(
-                    userAccount = userAccount,
-                    userProfile = userProfileDto.toDomain(),
-                    userRankInfo = userRankInfo,
-                )
-            }.catch { onError(it.message.toString()) }.flowOn(Dispatchers.IO)
-    }
+        val userProfile = getUserProfileDto(userAccount.uid) { throw IllegalStateException(it) }
+            .single()
+            .toDomain()
+
+        val userRankInfo =
+            getUserRankInfo(userAccount.summonerId) { throw IllegalStateException(it) }
+                .single()
+
+        emit(
+            User(
+                userAccount = userAccount,
+                userProfile = userProfile,
+                userRankInfo = userRankInfo
+            )
+        )
+    }.catch { onError(it.message.toString()) }.flowOn(Dispatchers.IO)
 
     override suspend fun getUserAccount(
         gameName: String,
@@ -110,9 +113,14 @@ class DefaultUserRepository @Inject constructor(
 
     override suspend fun saveCurrentUser(
         userAccount: UserAccount,
-    ) = userDao.saveUser(userAccount.toEntity())
+    ) = userDao.saveUser(userAccount.toEntity(true))
 
-    override suspend fun deleteCurrentUser(userAccount: UserAccount) {
-        TODO("Not yet implemented")
+    override suspend fun getPreviousUserAccounts(): List<UserAccount> {
+        return userDao.getPreviousUsers().toDomain()
+    }
+
+    override suspend fun updateUserAccount(userAccount: UserAccount, isCurrentUser: Boolean) {
+        val userAccountEntity = userAccount.toEntity(isCurrentUser)
+        userDao.updateUsers(userAccountEntity)
     }
 }

@@ -4,11 +4,18 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
@@ -43,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.woosuk.loldiary.R
+import com.woosuk.loldiary.domain.model.UserAccount
 import com.woosuk.loldiary.ui.onboarding.OnboardingViewModel.OnboardingEvent
 import com.woosuk.loldiary.ui.theme.LoLDiaryTheme
 import kotlinx.coroutines.flow.launchIn
@@ -56,6 +64,7 @@ fun OnboardingRoute(
     val nickName by onboardingViewModel.nickName.collectAsStateWithLifecycle()
     val tagLine by onboardingViewModel.tagLine.collectAsStateWithLifecycle()
     val isLoading by onboardingViewModel.isLoading.collectAsStateWithLifecycle()
+    val previousUsers by onboardingViewModel.previousUserAccounts.collectAsStateWithLifecycle()
     var onboardingEvent by remember { mutableStateOf<OnboardingEvent?>(null) }
 
     LaunchedEffect(Unit) {
@@ -76,22 +85,29 @@ fun OnboardingRoute(
         canCompleteOnboarding = onboardingViewModel.canCompleteOnboarding(),
         onboardingEvent = onboardingEvent,
         navigateToMainScreen = navigateToMainScreen,
+        previousUsers = previousUsers,
+        onClickItem = {
+            onboardingViewModel.onTagLineChanged(it.tageLine)
+            onboardingViewModel.onNickNameChanged(it.gameName)
+        }
     )
 }
 
 @Composable
 fun OnboardingScreen(
-    nickName: String,
-    tagLine: String,
-    isLoading: Boolean,
-    onNickNameChanged: (String) -> Unit,
-    onTagLineChanged: (String) -> Unit,
-    onClearTagLine: () -> Unit,
-    onClearNickName: () -> Unit,
-    onCompleteOnboarding: () -> Unit,
-    canCompleteOnboarding: Boolean,
-    onboardingEvent: OnboardingEvent?,
-    navigateToMainScreen: () -> Unit,
+    nickName: String = "",
+    tagLine: String = "",
+    previousUsers: List<UserAccount>,
+    isLoading: Boolean = false,
+    onNickNameChanged: (String) -> Unit = {},
+    onTagLineChanged: (String) -> Unit = {},
+    onClearTagLine: () -> Unit = {},
+    onClearNickName: () -> Unit = {},
+    onCompleteOnboarding: () -> Unit = {},
+    canCompleteOnboarding: Boolean = false,
+    onboardingEvent: OnboardingEvent? = null,
+    navigateToMainScreen: () -> Unit = {},
+    onClickItem: (UserAccount) -> Unit,
 ) {
     val context = LocalContext.current
     Surface(
@@ -101,13 +117,13 @@ fun OnboardingScreen(
         Box(Modifier.fillMaxSize()) {
             Column() {
                 OnboardingIntroduction()
-                NickNameTextField(
+                OnBoardingNickNameTextField(
                     nickName = nickName,
                     onNickNameChanged = onNickNameChanged,
                     onClear = onClearNickName,
                 )
 
-                TagLineTextField(
+                OnBoardingTagLineTextField(
                     tagLine = tagLine,
                     onTagLineChanged = onTagLineChanged,
                     onClear = onClearTagLine,
@@ -116,6 +132,11 @@ fun OnboardingScreen(
                 OnboardingCompleteButton(
                     onClick = onCompleteOnboarding,
                     enabled = canCompleteOnboarding,
+                )
+                Spacer(modifier = Modifier.height(17.dp))
+                OnboardingPreviousUserList(
+                    previousUsers = previousUsers,
+                    onClickItem = onClickItem
                 )
             }
 
@@ -149,7 +170,7 @@ fun OnboardingIntroduction(
         Image(
             modifier = Modifier.padding(bottom = 10.dp),
             painter = painterResource(id = R.drawable.app_logo),
-            contentDescription = null,
+            contentDescription = "앱 아이콘",
         )
         Text(
             text = "내 소환사를 등록하세요!",
@@ -160,7 +181,7 @@ fun OnboardingIntroduction(
 }
 
 @Composable
-fun NickNameTextField(
+fun OnBoardingNickNameTextField(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .padding(17.dp),
@@ -179,7 +200,7 @@ fun NickNameTextField(
 }
 
 @Composable
-fun TagLineTextField(
+fun OnBoardingTagLineTextField(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .padding(17.dp),
@@ -217,7 +238,7 @@ fun OnboardingTextField(
             if (text.isNotEmpty()) {
                 Icon(
                     imageVector = Icons.Filled.Cancel,
-                    contentDescription = null,
+                    contentDescription = "clear button",
                     modifier = Modifier.clickable {
                         onClear()
                     },
@@ -252,6 +273,39 @@ fun OnboardingCompleteButton(
     }
 }
 
+@Composable
+fun OnboardingPreviousUserList(
+    previousUsers: List<UserAccount>,
+    onClickItem: (UserAccount) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        items(
+            items = previousUsers,
+        ) { user ->
+            Row(
+                modifier = Modifier.clickable {
+                    onClickItem(user)
+                }
+            ) {
+                Text(
+                    text = user.gameName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = user.tageLine,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+    }
+}
+
+
 @Preview
 @Composable
 fun NickNameTextFieldPreview() {
@@ -260,7 +314,7 @@ fun NickNameTextFieldPreview() {
             modifier = Modifier
                 .background(Color.White),
         ) {
-            NickNameTextField(nickName = "", onNickNameChanged = {}) {
+            OnBoardingNickNameTextField(nickName = "", onNickNameChanged = {}) {
             }
         }
     }

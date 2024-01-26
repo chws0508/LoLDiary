@@ -11,11 +11,10 @@ class GetUserUseCase @Inject constructor(
     suspend operator fun invoke(
         gameName: String,
         tagLine: String,
-        isCurrentUser: Boolean = false,
+
         onError: (String) -> Unit,
     ): Flow<User> = userRepository.getUser(
         gameName = gameName,
         tageLine = tagLine,
-        isCurrentUser = isCurrentUser,
     ) { onError(it) }
 }

@@ -10,7 +10,6 @@ interface UserRepository {
     suspend fun getUser(
         gameName: String,
         tageLine: String,
-        isCurrentUser: Boolean,
         onError: (String) -> Unit,
     ): Flow<User>
 
@@ -29,5 +28,7 @@ interface UserRepository {
 
     suspend fun saveCurrentUser(userAccount: UserAccount): Long
 
-    suspend fun deleteCurrentUser(userAccount: UserAccount)
+    suspend fun getPreviousUserAccounts(): List<UserAccount>
+
+    suspend fun updateUserAccount(userAccount: UserAccount, isCurrentUser: Boolean)
 }
