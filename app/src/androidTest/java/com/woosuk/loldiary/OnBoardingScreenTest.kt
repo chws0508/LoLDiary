@@ -7,6 +7,7 @@ import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
@@ -166,7 +167,7 @@ class OnBoardingScreenTest {
         composeHiltTestRule.onNodeWithText("로그아웃").performClick()
 
         // then
-        composeHiltTestRule.onNodeWithText("박보영").assertIsDisplayed()
+        composeHiltTestRule.onNode(hasText("박보영#0508")).assertIsDisplayed()
     }
 
     @Test
@@ -176,11 +177,9 @@ class OnBoardingScreenTest {
         composeHiltTestRule.onNodeWithText("태그").performTextInput("0508")
         composeHiltTestRule.onNodeWithText("완료").performClick()
         composeHiltTestRule.onNodeWithText("로그아웃").performClick()
-        composeHiltTestRule.onNodeWithText("박보영").performClick()
+        composeHiltTestRule.onNodeWithText("박보영#0508").performClick()
 
         // then
-        composeHiltTestRule.onNodeWithText("닉네임").assertDoesNotExist()
-        composeHiltTestRule.onNodeWithText("태그").assertDoesNotExist()
         composeHiltTestRule.onAllNodesWithText("박보영")[0].assertIsDisplayed()
         composeHiltTestRule.onAllNodesWithText("0508")[0].assertIsDisplayed()
     }

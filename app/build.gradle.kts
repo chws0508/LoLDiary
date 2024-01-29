@@ -106,6 +106,7 @@ dependencies {
     // landScape
     implementation("com.github.skydoves:landscapist-glide:2.2.13")
     implementation("com.github.skydoves:landscapist-coil:2.2.13")
+    implementation ("com.github.skydoves:landscapist-placeholder:2.2.13")
 
     // navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")

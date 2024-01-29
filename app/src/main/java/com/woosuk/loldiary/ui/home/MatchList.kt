@@ -27,11 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
+import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 import com.woosuk.loldiary.R
 import com.woosuk.loldiary.domain.model.UserAccount
 import com.woosuk.loldiary.domain.model.UserMatchInfo
 import com.woosuk.loldiary.ui.theme.LoLDiaryTheme
+import com.woosuk.loldiary.ui.theme.backgroundDark
+import com.woosuk.loldiary.ui.theme.shimmerHighLight
 import com.woosuk.loldiary.ui.utils.toGameDurationFormat
 import java.time.LocalDateTime
 
@@ -55,7 +59,8 @@ fun MatchInfoItem(
     userMatchInfo: UserMatchInfo,
 ) {
     Surface(
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
             .padding(8.dp),
         shadowElevation = 8.dp,
         shape = RoundedCornerShape(8.dp),
@@ -141,11 +146,14 @@ fun ChampionAndRune(
                 .clip(RoundedCornerShape(5.dp))
                 .align(Alignment.CenterStart),
             imageModel = { championImageUrl },
-            requestOptions = {
-                RequestOptions()
-                    .override(250, 250)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .sizeMultiplier(0.8f)
+            component = rememberImageComponent {
+                +ShimmerPlugin(
+                    baseColor = backgroundDark,
+                    highlightColor = shimmerHighLight
+                )
+            },
+            failure = {
+                Box(modifier = Modifier.background(color = backgroundDark)){}
             }
         )
         GlideImage(
@@ -154,11 +162,14 @@ fun ChampionAndRune(
                 .clip(RoundedCornerShape(5.dp))
                 .align(Alignment.TopEnd),
             imageModel = { spell1ImageUrl },
-            requestOptions = {
-                RequestOptions()
-                    .override(100, 100)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .sizeMultiplier(0.5f)
+            component = rememberImageComponent {
+                +ShimmerPlugin(
+                    baseColor = backgroundDark,
+                    highlightColor = shimmerHighLight
+                )
+            },
+            failure = {
+                Box(modifier = Modifier.background(color = backgroundDark)){}
             }
         )
 
@@ -168,11 +179,14 @@ fun ChampionAndRune(
                 .clip(RoundedCornerShape(5.dp))
                 .align(Alignment.BottomEnd),
             imageModel = { spell2ImageUrl },
-            requestOptions = {
-                RequestOptions()
-                    .override(100, 100)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .sizeMultiplier(0.5f)
+            component = rememberImageComponent {
+                +ShimmerPlugin(
+                    baseColor = backgroundDark,
+                    highlightColor = shimmerHighLight
+                )
+            },
+            failure = {
+                Box(modifier = Modifier.background(color = backgroundDark)){}
             }
         )
     }
@@ -205,14 +219,14 @@ fun ItemList(
                     .size(25.dp)
                     .clip(RoundedCornerShape(5.dp)),
                 imageModel = { it },
-                requestOptions = {
-                    RequestOptions()
-                        .override(100, 100)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .sizeMultiplier(0.3f)
-                        .placeholder(R.drawable.app_logo)
-                        .error(R.drawable.app_logo)
+                component = rememberImageComponent {
+                    +ShimmerPlugin(
+                        baseColor = backgroundDark,
+                        highlightColor = shimmerHighLight
+                    )
+                },
+                failure = {
+                   Box(modifier = Modifier.background(color = backgroundDark)){}
                 }
             )
         }

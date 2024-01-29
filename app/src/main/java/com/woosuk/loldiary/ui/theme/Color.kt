@@ -1,6 +1,7 @@
 package com.woosuk.loldiary.ui.theme
 import androidx.compose.ui.graphics.Color
 
+val shimmerHighLight = Color(0xA3C2C2C2)
 val primaryLight = Color(0xFF4C662B)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFCDEDA3)
