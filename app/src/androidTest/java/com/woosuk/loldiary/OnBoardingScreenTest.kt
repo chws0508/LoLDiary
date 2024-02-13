@@ -18,20 +18,19 @@ import androidx.compose.ui.test.performTextInput
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.espresso.IdlingRegistry
-import com.woosuk.loldiary.di.PersistenceModule
-import com.woosuk.loldiary.ui.home.navigation.HOME_ROUTE
-import com.woosuk.loldiary.ui.main.LoLDiaryApp
-import com.woosuk.loldiary.ui.main.MainActivity
-import com.woosuk.loldiary.ui.onboarding.OnboardingRoute
-import com.woosuk.loldiary.ui.onboarding.OnboardingViewModel
-import com.woosuk.loldiary.ui.onboarding.navigation.ONBOARDING_ROUTE
+import com.woosuk.data.di.PersistenceModule
+import com.woosuk.home.navigation.HOME_ROUTE
+import com.woosuk.idlingtest.CountingIdlingResource
 import com.woosuk.loldiary.ui.theme.LoLDiaryTheme
-import com.woosuk.loldiary.ui.utils.CountingIdlingResource
+import com.woosuk.main.LoLDiaryApp
+import com.woosuk.main.MainActivity
+import com.woosuk.onboarding.OnboardingRoute
+import com.woosuk.onboarding.OnboardingViewModel
+import com.woosuk.onboarding.navigation.ONBOARDING_ROUTE
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import junit.framework.TestCase.assertEquals
-import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -39,9 +38,6 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-@UninstallModules(
-    PersistenceModule::class
-)
 class OnBoardingScreenTest {
 
     @get:Rule(order = 1)

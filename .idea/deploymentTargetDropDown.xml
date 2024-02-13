@@ -13,18 +13,74 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="$USER_HOME$/.android/avd/Pixel_4_XL_API_33.avd" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_4_API_29.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-01-07T13:53:55.478137Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-02-08T19:29:49.304691Z" />
+          <targetsSelectedWithDialog>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Nexus_10_Edited_API_33.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_XL_API_31_android_32_.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_XL_API_32.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_XL_API_30.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_4_API_29.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_XL_API_28.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetsSelectedWithDialog>
         </State>
       </entry>
-      <entry key="닉네임칸과_태그를_모두_입력하고_완료버튼을_누르고_홈_화면으로_이동한_후_로그아웃을_누르면_이전_로그인_기록이_나타난다()">
+      <entry key="닉네임칸과_태그가_모두_입력되면_버튼의_클릭이_활성화된다()">
         <State />
       </entry>
-      <entry key="이전_로그인_기록을_클릭하면_텍스트_필드에_입력이_된다()">
+      <entry key="닉네임칸과_태그를_모두_입력하고_완료버튼을_누르면_홈_화면으로_이동한다()">
         <State />
       </entry>
     </value>

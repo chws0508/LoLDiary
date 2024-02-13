@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_home_title">홈</string>
+    <string name="tab_diary_title">일기장</string>
+    <string name="tab_black_list_title">블랙리스트</string>
+</resources>
