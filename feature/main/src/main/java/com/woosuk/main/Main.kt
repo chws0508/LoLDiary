@@ -136,7 +136,7 @@ fun MainBottomBar(
 ) {
     val context = LocalContext.current
     NavigationBar {
-        BottomTab.values().forEach { tab ->
+        BottomTab.entries.forEach { tab ->
             NavigationBarItem(
                 selected = currentDestination.route == tab.route,
                 onClick = { navController.navigateToTabScreen(tab) },

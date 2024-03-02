@@ -1,15 +1,15 @@
 package com.woosuk.main
 
 import android.animation.ObjectAnimator
-import android.os.Build
+import android.animation.PropertyValuesHolder.ofFloat
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.woosuk.home.navigation.HOME_ROUTE
 import com.woosuk.loldiary.ui.theme.LoLDiaryTheme
@@ -21,20 +21,23 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
-    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+        val splashScreen = installSplashScreen()
 
-        }else{
-            splashScreen.setOnExitAnimationListener { splashScreenView ->
-                ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1F, 0F).apply {
-                    interpolator = AccelerateDecelerateInterpolator()
-                    duration = 200L
-                    doOnEnd { splashScreenView.remove() }
-                }.start()
-            }
+        splashScreen.setOnExitAnimationListener { splashScreenView ->
+            val scaleX = ofFloat(View.SCALE_X, 1f, 5f, 1f)
+            val scaleY = ofFloat(View.SCALE_Y, 1f, 5f, 1f)
+            ObjectAnimator.ofPropertyValuesHolder(splashScreenView.iconView, scaleX, scaleY)
+                .run {
+                    interpolator = AnticipateInterpolator()
+                    duration = 1000L
+                    doOnEnd {
+                        splashScreenView.remove()
+                    }
+                    start()
+                }
         }
 
         lifecycleScope.launch {

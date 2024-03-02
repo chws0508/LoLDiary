@@ -11,4 +11,5 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:blacklist"))
     implementation(project(":feature:diary"))
+    implementation(libs.androidx.core.splashscreen)
 }
